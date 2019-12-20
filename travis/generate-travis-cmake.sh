@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cat << EOF > ../sdk-paths-$LOGNAME@Clang-Darwin.cmake
+cat << EOF > sdk-paths-$LOGNAME@Clang-Darwin.cmake
 set(__depdir "${CMAKE_CURRENT_LIST_DIR}/opentrack-depends")
 
 function(set_sdk name value)

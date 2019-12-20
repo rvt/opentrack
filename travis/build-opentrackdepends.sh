@@ -1,6 +1,5 @@
 #!/bin/bash
 pwd=`pwd`
-cd ..
 git clone --recurse-submodules -j8 https://github.com/opentrack/opentrack-depends
 mkdir opentrack-depends/aruco/build
 cd opentrack-depends/aruco/build
