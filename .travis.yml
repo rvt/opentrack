@@ -8,12 +8,10 @@ jobs:
       osx_image: xcode11.3
       compiler: clang
       env:
-        - LDFLAGS="-L/usr/local/opt/qt/lib"
-        - CPPFLAGS="-I/usr/local/opt/qt/include"
         - Qt5_DIR="/usr/local/opt/qt" 
         - PKG_CONFIG_PATH="/usr/local/opt/qt/lib/pkgconfig"
-        #- CPPFLAGS="-I/usr/local/opt/llvm/include"
-        #- LDFLAGS="-L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib"
+        - CPPFLAGS="-I/usr/local/opt/llvm/include"
+        - LDFLAGS="-L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib"
 
 addons:
   homebrew:
@@ -29,10 +27,11 @@ script:
   - travis/build-opentrackdepends.sh
   - travis/generate-travis-cmake.sh
   - pwd
-  - tree
   - which cmake
   - cmake --version 
   - mkdir build
   - cd build
   - cmake ..
   - make VERBOSE=1 install
+  - cd build/install/opentrack.app
+  - tree
