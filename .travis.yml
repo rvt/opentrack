@@ -24,6 +24,11 @@ addons:
     update: true
 
 script:
+  # Temporal untill merged
+  - rm -r video-ps3eye/ps3eye-driver
+  - git clone https://github.com/rvt/PS3EYEDriver video-ps3eye/ps3eye-driver
+  - cd video-ps3eye/ps3eye-driver && git checkout osx-build-fix
+  # Temporal untill merged
   - travis/build-opentrackdepends.sh
   - travis/generate-travis-cmake.sh
   - pwd
