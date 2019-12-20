@@ -1,4 +1,4 @@
-os: 
+xos: 
   - osx
 language: cpp
 
@@ -6,11 +6,14 @@ jobs:
   include:
     - os: osx
       osx_image: xcode11.3
+      compiler: clang
       env:
         - LDFLAGS="-L/usr/local/opt/qt/lib"
         - CPPFLAGS="-I/usr/local/opt/qt/include"
         - Qt5_DIR="/usr/local/opt/qt" 
         - PKG_CONFIG_PATH="/usr/local/opt/qt/lib/pkgconfig"
+        #- CPPFLAGS="-I/usr/local/opt/llvm/include"
+        #- LDFLAGS="-L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib"
 
 addons:
   homebrew:
@@ -19,10 +22,12 @@ addons:
       - eigen
       - opencv
       - cmake
+      - tree
     update: true
 
 before_script:
   - travis/build-opentrackdepends.sh
+  - travis/generate-travis-cmake.sh
 
 script:
   - tree
