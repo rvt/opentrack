@@ -25,11 +25,9 @@ addons:
       - tree
     update: true
 
-before_script:
+script:
   - travis/build-opentrackdepends.sh
   - travis/generate-travis-cmake.sh
-
-script:
   - tree
   - which cmake
   - cmake --version 
