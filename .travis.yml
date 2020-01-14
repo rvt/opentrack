@@ -1,42 +1,84 @@
-xos: 
-  - osx
 language: cpp
+os:
+  - osx
+
+git:
+  submodules: false
+  #clone: false
 
 jobs:
+  allow_failures:
+    - os: osx
+
   include:
     - os: osx
       osx_image: xcode11.3
+      # TODO, try both compilers      
       compiler: clang
       env:
         - Qt5_DIR="/usr/local/opt/qt" 
-        - PKG_CONFIG_PATH="/usr/local/opt/qt/lib/pkgconfig"
-        - CPPFLAGS="-I/usr/local/opt/llvm/include"
-        - LDFLAGS="-L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib"
+      addons:
+        homebrew:
+          update: true
+          packages: 
+            - qt5
+            - eigen
+            - opencv
+            - cmake
+            - libusb
+            - create-dmg
+            - imagemagick
+            - tree
+      before_install:
+        - export PATH="/usr/local/opt/qt/bin:$PATH"
+      
+    # - os: linux
+    #   dist: bionic
+    #   compiler: gcc
+    #   addons:
+    #     apt:
+    #       update: true
+    #       packages:
+    #         #- libssl1.0-dev
+    #         - libopencv-dev
+    #         - libeigen3-dev 
+    #         #- libusb-1.0-0-dev
+    #         - tree 
+    #         - cmake 
+    #         - build-essential 
+    #         - libprocps-dev
+    #         - qt5-default 
+    #         - qttools5-dev 
+    #         - qttools5-dev-tools
+    #         - qtbase5-private-dev
+    #         - curl
+    #   before_install:
+    #     - eval "${MATRIX_EVAL}"
+    #     - mkdir $HOME/usr
+    #     - export PATH="$HOME/usr/bin:$PATH"
+    #     - curl https://cmake.org/files/v3.16/cmake-3.16.0-Linux-x86_64.sh --output cmake.sh
+    #     - chmod +x cmake.sh
+    #     - ./cmake.sh --prefix=$HOME/usr --exclude-subdir --skip-license
 
-addons:
-  homebrew:
-    packages: 
-      - qt5
-      - eigen
-      - opencv
-      - cmake
-      - tree
-    update: true
+before_install:
+  - eval "${MATRIX_EVAL}"
+  - export PATH="/usr/local/opt/qt/bin:$PATH"
 
 script:
-  # Temporal untill merged
-  - rm -r video-ps3eye/ps3eye-driver
-  - git clone https://github.com/rvt/PS3EYEDriver video-ps3eye/ps3eye-driver
-  - cd video-ps3eye/ps3eye-driver && git checkout osx-build-fix
-  # Temporal untill merged
-  - travis/build-opentrackdepends.sh
-  - travis/generate-travis-cmake.sh
   - pwd
   - which cmake
   - cmake --version 
+  - rm -rf build
   - mkdir build
+  # Temporal untill merged
+#  - git clone https://github.com/rvt/PS3EYEDriver video-ps3eye/ps3eye-driver
+#  - cd video-ps3eye/ps3eye-driver && git checkout osx-build-fix && cd ../..
+  # Temporal untill merged
+  - rm -rf video-ps3eye/ps3eye-driver
+  - travis/build-opentrackdepends.sh
+  - travis/generate-travis-cmake.sh
   - cd build
-  - cmake ..
+  - cmake -DCMAKE_BUILD_TYPE=Release ..
   - make VERBOSE=1 install
-  - cd build/install/opentrack.app
-  - tree
+  - tree -dl install 
+  
